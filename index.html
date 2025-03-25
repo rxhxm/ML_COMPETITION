@@ -467,6 +467,35 @@ weights = np.linalg.solve(X_train.T @ X_train + alpha * np.eye(n_features), X_tr
         <p>This analysis sparked major improvements. I created position-sensitive features ("h" at beginning vs. middle), specialized sub-models for problematic word categories, and rule-based overrides for distinctive patterns. "If a human instantly recognizes 'ñ' as Spanish, my model should too!" These changes boosted overall test accuracy from 87.3% to 91.2%.</p>
 
         <p>Overfitting was unavoidable with 900+ features but only 240 training words. The solution? Strong regularization (α=10.0) and an ensemble approach that reduced overfitting by 76%, proving that sometimes the best answer isn't a single model but a carefully weighted committee.</p>
+
+        <h1>Lessons & Takeaways: Beyond the Competition</h1>
+        <p>Coming in second place in a language classification competition taught me lessons that extend far beyond Spanish and French words. Looking back, I realize the journey matters more than the grade or finish line.</p>
+
+        <p>Feature engineering trumps model complexity. The most sophisticated algorithm can't compensate for poor features. In retrospect, my biggest wins came from creating signals that highlighted linguistic patterns, not from tweaking model parameters. This principle applies universally: make your data speak before making your model listen.</p>
+        
+        <p>"What if the secret to machine learning isn't in the learning at all, but in how we represent the problem?" This question transformed my approach to ML competitions. Domain knowledge is the hidden multiplier that separates good models from great ones. In every competition I've seen the same pattern: domain experts consistently outperform algorithm experts.</p>
+        
+        <h2>Future Improvements: Research First, Code Later</h2>
+        <p>If I could do it again, I'd spend less time coding and more time researching how linguists encode language differences. Spending 80% of my time on feature engineering and 20% on modeling (not vice versa) would likely yield better results.</p>
+        
+        <p>The razor-thin margins between top performers (90.3% vs. 88.9% for 5th place) highlight a profound truth about ML competitions: randomness plays a significant role in determining winners. As my professor wisely noted, "The top model isn't necessarily better than fifth place—it just happened to score higher on this test set" and that that regenerating the test set would likely crown a different champion. This isn't discouraging—it's liberating! It means focusing on robust methodologies matters more than obsessing over leaderboard positions. The lesson? Don't obsess over decimal places. Instead, focus on robust feature engineering, domain knowledge integration, and efficient cross-validation. These principles will serve you well in any data science challenge.</p>
+        
+        <p>Invest your time where the highest returns are. In most competitions, that's:</p>
+        <ul>
+            <li>Understanding the domain deeply before writing a line of code</li>
+            <li>Crafting features that capture expert intuition</li>
+            <li>Building simple, robust models that avoid overfitting on small datasets</li>
+        </ul>
+        <p>The best competitors don't just build good models—they reframe the problem to make it easier to solve.</p>
+    </section>
+    
+    <div class="divider"></div>
+    
+    <section style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
+        <h2>Acknowledgments</h2>
+        <p>The full code for this project is available on <a href="https://github.com/rxhxm/ML_COMPETITION/blob/main/classify.py" style="color: rgba(255, 255, 255, 0.85); text-decoration: underline;">GitHub</a>.</p>
+        <p>Special thanks to <a href="https://eldridgejm.github.io/" style="color: rgba(255, 255, 255, 0.85); text-decoration: underline;">Professor Justin Eldridge</a> for being the best ML professor one could ask for.</p>
+        <p>Thanks also to Angel for his invaluable guidance and insights from having taken the class previously.</p>
     </section>
     
     <script>
