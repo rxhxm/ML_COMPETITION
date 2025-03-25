@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Language Classification Model Evolution</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      background-color: #111;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(94, 151, 246, 0.2);
+    }
+
+    .title {
+      text-align: center;
+      color: #5E97F6;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+    }
+
+    .model-evolution {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .model-card {
+      flex: 1;
+      min-width: 250px;
+      background-color: #1A1A1A;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(246, 190, 94, 0.1);
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .model-card:hover {
+      transform: scale(1.05);
+    }
+
+    .model-name {
+      font-size: 1.5em;
+      color: #5E97F6;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #5E97F6;
+      padding-bottom: 10px;
+    }
+
+    .model-description {
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+    }
+
+    .model-stats {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .stat-label {
+      color: #F6BE5E;
+      font-weight: bold;
+    }
+
+    .stat-value {
+      color: #5E97F6;
+    }
+
+    .overfitting-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #FF6B6B;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.8em;
+    }
+
+    .runtime-color-fast {
+      color: #4CAF50;
+    }
+
+    .runtime-color-medium {
+      color: #FFC107;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Language Classification Model Evolution</h1>
+    
+    <div class="model-evolution">
+      <div class="model-card">
+        <div class="overfitting-tag">Potential Overfitting</div>
+        <div class="model-name">super_classifier</div>
+        <div class="model-description">
+          Ensemble of multiple models with extensive language-specific patterns. Highly sophisticated feature engineering using TF-IDF n-grams and L2 regularization.
+        </div>
+        <div class="model-stats">
+          <div>
+            <span class="stat-label">Accuracy</span>
+            <div class="stat-value">99.58%</div>
+          </div>
+          <div>
+            <span class="stat-label">Runtime</span>
+            <div class="stat-value runtime-color-fast">Fast</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name">best_model</div>
+        <div class="model-description">
+          Voting ensemble combining Ridge, Logistic Regression, and Random Forest. Uses TF-IDF character n-grams with suffix/prefix analysis.
+        </div>
+        <div class="model-stats">
+          <div>
+            <span class="stat-label">Accuracy</span>
+            <div class="stat-value">87.35%</div>
+          </div>
+          <div>
+            <span class="stat-label">Runtime</span>
+            <div class="stat-value runtime-color-fast">Very Fast</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name">ensemble_classifier</div>
+        <div class="model-description">
+          Multiple specialist models using position-specific patterns. Employed bootstrap sampling and tiered regularization.
+        </div>
+        <div class="model-stats">
+          <div>
+            <span class="stat-label">Accuracy</span>
+            <div class="stat-value">86.25%</div>
+          </div>
+          <div>
+            <span class="stat-label">Runtime</span>
+            <div class="stat-value runtime-color-medium">Medium</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name">perfect_classifier</div>
+        <div class="model-description">
+          Hybrid approach combining machine learning with explicit rules. Used chi2 feature selection and 25 linguistic features.
+        </div>
+        <div class="model-stats">
+          <div>
+            <span class="stat-label">Accuracy</span>
+            <div class="stat-value">87.47%</div>
+          </div>
+          <div>
+            <span class="stat-label">Runtime</span>
+            <div class="stat-value runtime-color-fast">Fast</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name">classify.py</div>
+        <div class="model-description">
+          Pure implementation using Gini impurity for feature selection. Focused on informative pattern selection with alpha optimization.
+        </div>
+        <div class="model-stats">
+          <div>
+            <span class="stat-label">Accuracy</span>
+            <div class="stat-value">86.63%</div>
+          </div>
+          <div>
+            <span class="stat-label">Runtime</span>
+            <div class="stat-value runtime-color-medium">Slow</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name">improved_classifier</div>
+        <div class="model-description">
+          Basic model with simple character frequency analysis. Minimal feature engineering and no complex regularization.
+        </div>
+        <div class="model-stats">
+          <div>
+            <span class="stat-label">Accuracy</span>
+            <div class="stat-value">74.58%</div>
+          </div>
+          <div>
+            <span class="stat-label">Runtime</span>
+            <div class="stat-value runtime-color-fast">Fast</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

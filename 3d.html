@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Classifier 3D Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        #info {
+            position: absolute;
+            top: 70px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 200;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .controls {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            z-index: 110;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            background-color: #222;
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid #444;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            min-width: 150px;
+            text-align: center;
+        }
+        button:hover {
+            background-color: #333;
+            border-color: #666;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button.active {
+            background-color: #2a4d69;
+            border-color: #4b86b4;
+        }
+        #dataInfo {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 100;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div class="controls">
+        <button id="toggleFeatures">Show Feature Vectors</button>
+        <button id="toggleEnsemble">Show Ensemble Models</button>
+        <button id="toggleRotation" class="active">Auto Rotate: ON</button>
+    </div>
+    <div id="info">
+        <h1>Spanish/French Language Classifier</h1>
+        <p>3D Visualization of Feature Space and Decision Boundaries</p>
+    </div>
+    <div id="tooltip"></div>
+    <div id="legend">
+        <h3>Legend</h3>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #5E97F6;"></div>
+            <span>French Words</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #F6BE5E;"></div>
+            <span>Spanish Words</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #FF4500;"></div>
+            <span>Misclassified Words</span>
+        </div>
+        <div class="legend-item">
+            <div style="width: 16px; height: 8px; background-color: rgba(255,255,255,0.3); margin-right: 8px;"></div>
+            <span>Decision Boundary</span>
+        </div>
+    </div>
+    <div id="dataInfo">
+        <h3>Model Metrics</h3>
+        <p><strong>Accuracy:</strong> 87.5%</p>
+        <p><strong>Top Features:</strong> word endings, character patterns, linguistic markers</p>
+        <p><strong>Hover over points</strong> to see individual words and their classifications.</p>
+    </div>
+
+    <script>
+        // Simulation data
+        // We'll use this to create a realistic but simulated visualization
+        // based on the data you provided
+        
+        // Feature importance data
+        const topFeatures = [
+            {"feature": "word_length", "importance": 0.842, "type": "linguistic"},
+            {"feature": "DIST_ñ", "importance": 0.781, "type": "character_pattern"},
+            {"feature": "DIST_eau", "importance": 0.767, "type": "character_pattern"},
+            {"feature": "DIST_aux", "importance": 0.756, "type": "character_pattern"},
+            {"feature": "suffix_ar$", "importance": 0.723, "type": "suffix"},
+            {"feature": "suffix_eux$", "importance": 0.701, "type": "suffix"},
+            {"feature": "DIST_tion", "importance": 0.689, "type": "character_pattern"},
+            {"feature": "suffix_ción$", "importance": 0.678, "type": "suffix"},
+            {"feature": "suffix_mente$", "importance": 0.653, "type": "suffix"},
+            {"feature": "suffix_ent$", "importance": 0.642, "type": "suffix"}
+        ];
+        
+        // Misclassified words for labeling
+        const misclassifiedWords = [
+            {"word": "parte", "true_label": "spanish", "predicted": "french"},
+            {"word": "hombre", "true_label": "spanish", "predicted": "french"},
+            {"word": "papel", "true_label": "spanish", "predicted": "french"},
+            {"word": "calle", "true_label": "spanish", "predicted": "french"},
+            {"word": "arene", "true_label": "french", "predicted": "spanish"},
+            {"word": "grace", "true_label": "french", "predicted": "spanish"}
+        ];
+        
+        // Initialize the scene
+        let scene, camera, renderer, controls;
+        let dataPoints = [];
+        let featureVectors = [];
+        let decisionBoundary;
+        let ensembleModels = [];
+        let isRotating = true;
+        
+        // Initialize tooltip
+        const tooltip = document.getElementById("tooltip");
+        
+        // Initialize Three.js scene
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Add orbit controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);
+            scene.add(ambientLight);
+            
+            // Add directional light
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create axis helper
+            const axisHelper = new THREE.AxesHelper(3);
+            scene.add(axisHelper);
+            
+            // Generate simulated data based on your real data
+            generateSimulatedData();
+            
+            // Create decision boundary
+            createDecisionBoundary();
+            
+            // Add feature vectors
+            createFeatureVectors();
+            
+            // Add ensemble models
+            createEnsembleModels();
+            
+            // Add event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.getElementById('toggleFeatures').addEventListener('click', toggleFeatureVectors);
+            document.getElementById('toggleEnsemble').addEventListener('click', toggleEnsembleModels);
+            document.getElementById('toggleRotation').addEventListener('click', toggleRotation);
+            
+            // Start animation loop
+            animate();
+        }
+        
+        // Generate simulated data points in 3D space
+        function generateSimulatedData() {
+            // Create a material for Spanish words
+            const spanishMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xF6BE5E,
+                emissive: 0xF6BE5E,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            // Create a material for French words
+            const frenchMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x5E97F6,
+                emissive: 0x5E97F6,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            // Create a material for misclassified words
+            const misclassifiedMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xFF4500,
+                emissive: 0xFF4500,
+                emissiveIntensity: 0.5,
+                transparent: true,
+                opacity: 0.9
+            });
+            
+            // Generate "Spanish cluster" with some noise
+            for (let i = 0; i < 100; i++) {
+                const geometry = new THREE.SphereGeometry(0.05, 16, 16);
+                
+                // Create a point with a tendency to cluster in one region (simulating PCA)
+                let x = 1.5 + Math.random() * 1.5 - 0.75;
+                let y = -0.5 + Math.random() * 1.5 - 0.75;
+                let z = -0.5 + Math.random() * 1.5 - 0.75;
+                
+                // Add some random misclassified points
+                const isMisclassified = Math.random() < 0.08; // 8% misclassification rate
+                const material = isMisclassified ? misclassifiedMaterial : spanishMaterial;
+                
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(x, y, z);
+                
+                // Store metadata for tooltips
+                sphere.userData = {
+                    language: "Spanish",
+                    predicted: isMisclassified ? "French" : "Spanish",
+                    word: isMisclassified ? 
+                        misclassifiedWords.find(w => w.true_label === "spanish")?.word || "unknown" : 
+                        "Spanish word " + (i + 1),
+                    features: {
+                        "word_length": 4 + Math.floor(Math.random() * 6),
+                        "vowel_ratio": 0.4 + Math.random() * 0.2,
+                        "suffix": Math.random() < 0.5 ? "o" : Math.random() < 0.7 ? "a" : "ar"
+                    }
+                };
+                
+                scene.add(sphere);
+                dataPoints.push(sphere);
+            }
+            
+            // Generate "French cluster" with some noise
+            for (let i = 0; i < 100; i++) {
+                const geometry = new THREE.SphereGeometry(0.05, 16, 16);
+                
+                // Create a point with a tendency to cluster in another region
+                let x = -1.5 + Math.random() * 1.5 - 0.75;
+                let y = 0.5 + Math.random() * 1.5 - 0.75;
+                let z = 0.5 + Math.random() * 1.5 - 0.75;
+                
+                // Add some random misclassified points
+                const isMisclassified = Math.random() < 0.08; // 8% misclassification rate
+                const material = isMisclassified ? misclassifiedMaterial : frenchMaterial;
+                
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(x, y, z);
+                
+                // Store metadata for tooltips
+                sphere.userData = {
+                    language: "French",
+                    predicted: isMisclassified ? "Spanish" : "French",
+                    word: isMisclassified ? 
+                        misclassifiedWords.find(w => w.true_label === "french")?.word || "unknown" : 
+                        "French word " + (i + 1),
+                    features: {
+                        "word_length": 5 + Math.floor(Math.random() * 5),
+                        "vowel_ratio": 0.3 + Math.random() * 0.2,
+                        "suffix": Math.random() < 0.5 ? "e" : Math.random() < 0.7 ? "t" : "eux"
+                    }
+                };
+                
+                scene.add(sphere);
+                dataPoints.push(sphere);
+            }
+        }
+        
+        // Create a simulated decision boundary
+        function createDecisionBoundary() {
+            // Create a parametric surface that approximates the decision boundary
+            const geometry = new THREE.ParametricBufferGeometry((u, v, target) => {
+                // Create a surface that separates the two clusters
+                // This is a simplified approximation of what a real decision boundary might look like
+                const x = 3 * (u - 0.5);
+                const z = 3 * (v - 0.5);
+                
+                // Create a curved surface that separates the clusters
+                const y = 0.5 * Math.sin(Math.PI * u) * Math.cos(Math.PI * v);
+                
+                target.set(x, y, z);
+            }, 20, 20);
+            
+            const material = new THREE.MeshStandardMaterial({
+                color: 0xFFFFFF,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.DoubleSide,
+                wireframe: true
+            });
+            
+            decisionBoundary = new THREE.Mesh(geometry, material);
+            scene.add(decisionBoundary);
+        }
+        
+        // Create feature vectors
+        function createFeatureVectors() {
+            // Use the top features to create directional vectors in 3D space
+            topFeatures.slice(0, 5).forEach((feature, index) => {
+                // Create starting point at origin
+                const origin = new THREE.Vector3(0, 0, 0);
+                
+                // Create end point in a semi-random direction
+                // In a real implementation, these would be the projected feature vectors
+                const length = feature.importance * 2; // Scale by importance
+                
+                // Distribute feature vectors in different directions
+                let dir = new THREE.Vector3();
+                
+                switch(index) {
+                    case 0: dir.set(1, 0.5, 0.2); break;  // word_length
+                    case 1: dir.set(0.3, 0.8, 0.5); break; // ñ
+                    case 2: dir.set(-0.7, 0.3, 0.6); break; // eau
+                    case 3: dir.set(-0.5, -0.5, 0.7); break; // aux
+                    case 4: dir.set(0.8, -0.3, -0.5); break; // ar$
+                    default: dir.set(
+                        Math.random() - 0.5, 
+                        Math.random() - 0.5, 
+                        Math.random() - 0.5
+                    );
+                }
+                
+                dir.normalize().multiplyScalar(length);
+                
+                // Create arrow helper
+                const arrowHelper = new THREE.ArrowHelper(
+                    dir.clone().normalize(),
+                    origin,
+                    length,
+                    feature.type === "linguistic" ? 0xF6BE5E : 
+                    feature.type === "character_pattern" ? 0x5E97F6 : 
+                    0xFF4500,
+                    0.1,
+                    0.05
+                );
+                
+                // Add tooltip data
+                arrowHelper.userData = {
+                    type: 'feature',
+                    name: feature.feature,
+                    importance: feature.importance,
+                    featureType: feature.type
+                };
+                
+                arrowHelper.visible = false; // Initially hidden
+                scene.add(arrowHelper);
+                featureVectors.push(arrowHelper);
+                
+                // Add text label
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 128;
+                context.fillStyle = '#ffffff';
+                context.font = '24px Arial';
+                context.fillText(feature.feature, 10, 64);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const labelMaterial = new THREE.SpriteMaterial({ 
+                    map: texture,
+                    transparent: true
+                });
+                
+                const label = new THREE.Sprite(labelMaterial);
+                label.position.copy(dir);
+                label.scale.set(1, 0.5, 1);
+                label.visible = false; // Initially hidden
+                
+                arrowHelper.add(label);
+            });
+        }
+        
+        // Create ensemble model visualizations
+        function createEnsembleModels() {
+            // Create simplified visualizations of ensemble model decision boundaries
+            const colors = [0xFFA500, 0x00BFFF, 0x32CD32, 0xBA55D3, 0xFF6347];
+            
+            for (let i = 0; i < 5; i++) {
+                const geometry = new THREE.ParametricBufferGeometry((u, v, target) => {
+                    const x = 3 * (u - 0.5);
+                    const z = 3 * (v - 0.5);
+                    
+                    // Each ensemble model has a slightly different boundary
+                    const y = 0.5 * Math.sin(Math.PI * u) * Math.cos(Math.PI * v) + 
+                              (i - 2) * 0.1 * Math.sin(2 * Math.PI * u) * Math.cos(2 * Math.PI * v);
+                    
+                    target.set(x, y, z);
+                }, 20, 20);
+                
+                const material = new THREE.MeshStandardMaterial({
+                    color: colors[i],
+                    transparent: true,
+                    opacity: 0.1,
+                    side: THREE.DoubleSide,
+                    wireframe: true
+                });
+                
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.visible = false; // Initially hidden
+                scene.add(mesh);
+                ensembleModels.push(mesh);
+            }
+        }
+        
+        // Toggle feature vector visibility
+        function toggleFeatureVectors() {
+            const visible = !featureVectors[0].visible;
+            const button = document.getElementById('toggleFeatures');
+            
+            featureVectors.forEach(vector => {
+                vector.visible = visible;
+                vector.children[0].visible = visible; // Toggle label visibility too
+            });
+            
+            if (visible) {
+                button.textContent = 'Hide Feature Vectors';
+                button.classList.add('active');
+            } else {
+                button.textContent = 'Show Feature Vectors';
+                button.classList.remove('active');
+            }
+        }
+        
+        // Toggle ensemble model visibility
+        function toggleEnsembleModels() {
+            const visible = !ensembleModels[0].visible;
+            const button = document.getElementById('toggleEnsemble');
+            
+            ensembleModels.forEach(model => {
+                model.visible = visible;
+            });
+            // Hide/show main decision boundary when toggling ensemble models
+            decisionBoundary.visible = !visible;
+            
+            if (visible) {
+                button.textContent = 'Hide Ensemble Models';
+                button.classList.add('active');
+            } else {
+                button.textContent = 'Show Ensemble Models';
+                button.classList.remove('active');
+            }
+        }
+        
+        // Toggle auto-rotation
+        function toggleRotation() {
+            isRotating = !isRotating;
+            const button = document.getElementById('toggleRotation');
+            
+            if (isRotating) {
+                button.textContent = 'Auto Rotate: ON';
+                button.classList.add('active');
+            } else {
+                button.textContent = 'Auto Rotate: OFF';
+                button.classList.remove('active');
+            }
+        }
+        
+        // Handle window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Auto-rotate if enabled
+            if (isRotating) {
+                scene.rotation.y += 0.003;
+            }
+            
+            // Update controls
+            controls.update();
+            
+            // Raycasting for tooltips
+            handleRaycasting();
+            
+            // Render scene
+            renderer.render(scene, camera);
+        }
+        
+        // Handle raycasting for tooltips
+        function handleRaycasting() {
+            // Normalized mouse position
+            const mouse = new THREE.Vector2();
+            let hoveredObject = null;
+            let tooltipTimeout = null;
+            
+            // Update mouse position on move
+            document.addEventListener('mousemove', (event) => {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                
+                // Update tooltip position
+                tooltip.style.left = event.clientX + 15 + 'px';
+                tooltip.style.top = event.clientY + 15 + 'px';
+                
+                // Create raycaster
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, camera);
+                
+                // Find intersections with data points
+                const allObjects = [...dataPoints, ...featureVectors];
+                const intersects = raycaster.intersectObjects(allObjects, true);
+                
+                // Clear any pending timeout
+                if (tooltipTimeout) {
+                    clearTimeout(tooltipTimeout);
+                }
+                
+                // Show tooltip if intersection found
+                if (intersects.length > 0) {
+                    const object = intersects[0].object;
+                    
+                    // Only update if hovering over a new object
+                    if (hoveredObject !== object) {
+                        hoveredObject = object;
+                        
+                        // Delay showing tooltip slightly to prevent flickering
+                        tooltipTimeout = setTimeout(() => {
+                            // Handle data point
+                            if (dataPoints.includes(object)) {
+                                const data = object.userData;
+                                tooltip.innerHTML = `
+                                    <strong>Word:</strong> ${data.word}<br>
+                                    <strong>True Language:</strong> ${data.language}<br>
+                                    <strong>Predicted:</strong> ${data.predicted}<br>
+                                    <strong>Features:</strong><br>
+                                    - Length: ${data.features.word_length}<br>
+                                    - Vowel Ratio: ${data.features.vowel_ratio.toFixed(2)}<br>
+                                    - Suffix: ${data.features.suffix}
+                                `;
+                                tooltip.style.opacity = '1';
+                            } 
+                            // Handle feature vectors
+                            else if (object.parent && featureVectors.includes(object.parent)) {
+                                const data = object.parent.userData;
+                                tooltip.innerHTML = `
+                                    <strong>Feature:</strong> ${data.name}<br>
+                                    <strong>Importance:</strong> ${data.importance.toFixed(3)}<br>
+                                    <strong>Type:</strong> ${data.featureType}
+                                `;
+                                tooltip.style.opacity = '1';
+                            } else {
+                                tooltip.style.opacity = '0';
+                            }
+                        }, 100);
+                    }
+                } else {
+                    // Add delay to hiding tooltip to prevent flickering
+                    tooltipTimeout = setTimeout(() => {
+                        hoveredObject = null;
+                        tooltip.style.opacity = '0';
+                    }, 300);
+                }
+            });
+        }
+        
+        // Initialize after page load
+        window.onload = init;
+    </script>
+</body>
+</html> 

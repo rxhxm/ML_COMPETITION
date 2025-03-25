@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Classifier</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 800px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .classifier {
+      display: flex;
+      height: 400px;
+    }
+    
+    .input-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      border-right: 1px solid #333;
+    }
+    
+    .word-queue {
+      margin-top: 40px;
+      text-align: center;
+    }
+    
+    .word {
+      font-size: 24px;
+      opacity: 0.6;
+      margin: 15px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .current-word {
+      font-size: 32px;
+      opacity: 1;
+      font-weight: bold;
+      background-color: #111;
+      padding: 10px 20px;
+      border-radius: 5px;
+      position: relative;
+    }
+    
+    .highlighted {
+      position: relative;
+      background-color: rgba(94, 151, 246, 0.2);
+    }
+    
+    .french-highlight {
+      color: #5E97F6;
+      text-shadow: 0 0 10px rgba(94, 151, 246, 0.5);
+    }
+    
+    .spanish-highlight {
+      color: #F6BE5E;
+      text-shadow: 0 0 10px rgba(246, 190, 94, 0.5);
+    }
+    
+    .feature-popup {
+      position: absolute;
+      background-color: rgba(25, 25, 25, 0.9);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .processing-area {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    
+    .analysis {
+      height: 60%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .feature-list {
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .feature-item {
+      margin: 10px 0;
+      padding: 8px;
+      background-color: #111;
+      border-radius: 4px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.5s ease;
+    }
+    
+    .feature-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .results {
+      height: 40%;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+    
+    .result-box {
+      width: 45%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid #333;
+      border-radius: 6px;
+      overflow-y: auto;
+    }
+    
+    .result-header {
+      width: 100%;
+      padding: 10px 0;
+      text-align: center;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+    }
+    
+    .french-header {
+      background-color: rgba(94, 151, 246, 0.2);
+      color: #5E97F6;
+    }
+    
+    .spanish-header {
+      background-color: rgba(246, 190, 94, 0.2);
+      color: #F6BE5E;
+    }
+    
+    .classified-word {
+      margin: 8px 0;
+      padding: 5px 10px;
+      border-radius: 4px;
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+      width: 80%;
+      text-align: center;
+    }
+    
+    .classified-french {
+      background-color: rgba(94, 151, 246, 0.1);
+      border: 1px solid rgba(94, 151, 246, 0.3);
+    }
+    
+    .classified-spanish {
+      background-color: rgba(246, 190, 94, 0.1);
+      border: 1px solid rgba(246, 190, 94, 0.3);
+    }
+    
+    .probability {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 3px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .progress-bar {
+      height: 4px;
+      background-color: #333;
+      width: 100%;
+      margin-top: 15px;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      transition: width 0.5s ease;
+    }
+    
+    .french-progress {
+      background-color: #5E97F6;
+    }
+    
+    .spanish-progress {
+      background-color: #F6BE5E;
+    }
+    
+    .decision-marker {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      height: 14px;
+      width: 2px;
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>French vs Spanish Classifier</h1>
+    </div>
+    
+    <div class="classifier">
+      <div class="input-area">
+        <h3>Input Words</h3>
+        <div class="word-queue">
+          <div class="word">bonjour</div>
+          <div class="word">universidad</div>
+          <div class="word">parfum</div>
+          <div class="word">calle</div>
+          <div class="word current-word">maison</div>
+          <div class="word">trabajo</div>
+          <div class="word">ventana</div>
+        </div>
+      </div>
+      
+      <div class="processing-area">
+        <div class="analysis">
+          <h3>Classification Analysis</h3>
+          <div class="feature-list">
+            <div class="feature-item" id="feature1">
+              Word ending: <span class="french-highlight">-on</span> (common in French)
+            </div>
+            <div class="feature-item" id="feature2">
+              Letter combination: <span class="french-highlight">ai</span> (frequent in French)
+            </div>
+            <div class="feature-item" id="feature3">
+              Word length: 6 letters (neutral feature)
+            </div>
+          </div>
+          
+          <div class="progress-bar">
+            <div class="progress-fill french-progress" id="frenchProbability"></div>
+            <div class="decision-marker"></div>
+          </div>
+          <div class="progress-bar" style="margin-top: 5px;">
+            <div class="progress-fill spanish-progress" id="spanishProbability"></div>
+            <div class="decision-marker"></div>
+          </div>
+        </div>
+        
+        <div class="results">
+          <div class="result-box">
+            <div class="result-header french-header">French</div>
+            <div class="classified-word classified-french">
+              bonjour
+              <div class="probability">92% confidence</div>
+            </div>
+            <div class="classified-word classified-french">
+              parfum
+              <div class="probability">98% confidence</div>
+            </div>
+          </div>
+          
+          <div class="result-box">
+            <div class="result-header spanish-header">Spanish</div>
+            <div class="classified-word classified-spanish">
+              universidad
+              <div class="probability">95% confidence</div>
+            </div>
+            <div class="classified-word classified-spanish">
+              calle
+              <div class="probability">89% confidence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Words to process
+    const words = [
+      {
+        text: "maison", 
+        language: "french", 
+        confidence: 87,
+        features: [
+          { text: "Word ending: -on (common in French)", highlight: "-on", type: "french" },
+          { text: "Letter combination: ai (frequent in French)", highlight: "ai", type: "french" },
+          { text: "Word length: 6 letters (neutral feature)", highlight: "", type: "neutral" }
+        ]
+      },
+      {
+        text: "trabajo", 
+        language: "spanish", 
+        confidence: 92,
+        features: [
+          { text: "Word ending: -jo (common in Spanish)", highlight: "jo", type: "spanish" },
+          { text: "Letter combination: -aba- (frequent in Spanish)", highlight: "aba", type: "spanish" },
+          { text: "Consonant cluster: tr- (more common in Spanish)", highlight: "tr", type: "spanish" }
+        ]
+      },
+      {
+        text: "ventana", 
+        language: "spanish", 
+        confidence: 89,
+        features: [
+          { text: "Word ending: -ana (common in Spanish)", highlight: "ana", type: "spanish" },
+          { text: "Vowel pattern: e-a-a (typical Spanish)", highlight: "e a a", type: "spanish" },
+          { text: "Consonant-vowel alternation (Spanish pattern)", highlight: "v n t n", type: "spanish" }
+        ]
+      }
+    ];
+    
+    let currentIndex = 0;
+    const frenchProbElem = document.getElementById('frenchProbability');
+    const spanishProbElem = document.getElementById('spanishProbability');
+    
+    // Function to highlight a specific part of a word
+    function highlightWordPart(word, highlightStr, type) {
+      if (!highlightStr) return word;
+      
+      // Special handling for multiple highlight strings
+      const highlights = highlightStr.split(' ');
+      let result = word;
+      
+      highlights.forEach(highlight => {
+        const regex = new RegExp(`(${highlight})`, 'g');
+        result = result.replace(regex, `<span class="${type}-highlight highlighted" data-feature="${highlight}">${highlight}<div class="feature-popup">Key ${type} feature</div></span>`);
+      });
+      
+      return result;
+    }
+    
+    // Function to process the next word
+    function processNextWord() {
+      if (currentIndex >= words.length) {
+        currentIndex = 0; // Reset to loop through words again
+      }
+      
+      const currentWord = words[currentIndex];
+      
+      // Update the word queue to highlight current word
+      const wordElements = document.querySelectorAll('.word');
+      wordElements.forEach((elem, index) => {
+        elem.classList.remove('current-word');
+        if (index === 4) { // The middle position
+          elem.innerHTML = currentWord.text;
+          elem.classList.add('current-word');
+        } else if (index > 4) {
+          const nextWordIndex = currentIndex + (index - 4);
+          if (nextWordIndex < words.length) {
+            elem.textContent = words[nextWordIndex].text;
+          } else {
+            elem.textContent = words[nextWordIndex - words.length].text;
+          }
+        }
+      });
+      
+      // Clear existing features
+      const featureList = document.querySelector('.feature-list');
+      featureList.innerHTML = '';
+      
+      // Add new features with a delay
+      currentWord.features.forEach((feature, idx) => {
+        const featureElem = document.createElement('div');
+        featureElem.className = 'feature-item';
+        featureElem.innerHTML = feature.text;
+        featureList.appendChild(featureElem);
+        
+        setTimeout(() => {
+          featureElem.classList.add('visible');
+        }, 300 * idx);
+      });
+      
+      // Update probabilities with animation
+      const frenchProb = currentWord.language === 'french' ? currentWord.confidence : 100 - currentWord.confidence;
+      const spanishProb = currentWord.language === 'spanish' ? currentWord.confidence : 100 - currentWord.confidence;
+      
+      setTimeout(() => {
+        frenchProbElem.style.width = `${frenchProb}%`;
+        spanishProbElem.style.width = `${spanishProb}%`;
+      }, 800);
+      
+      // Add highlighted word to results after a delay
+      setTimeout(() => {
+        // Create the highlighted version of the word
+        let displayWord = currentWord.text;
+        currentWord.features.forEach(feature => {
+          if (feature.highlight) {
+            displayWord = highlightWordPart(displayWord, feature.highlight, feature.type);
+          }
+        });
+        
+        const container = currentWord.language === 'french' ? 
+          document.querySelector('.result-box:first-child') : 
+          document.querySelector('.result-box:last-child');
+          
+        const newWordElem = document.createElement('div');
+        newWordElem.className = `classified-word classified-${currentWord.language}`;
+        newWordElem.innerHTML = displayWord;
+        
+        const probabilityElem = document.createElement('div');
+        probabilityElem.className = 'probability';
+        probabilityElem.textContent = `${currentWord.confidence}% confidence`;
+        
+        newWordElem.appendChild(probabilityElem);
+        container.appendChild(newWordElem);
+        
+        // Limit the number of words shown
+        const wordElems = container.querySelectorAll('.classified-word');
+        if (wordElems.length > 6) {
+          container.removeChild(wordElems[0]);
+        }
+      }, 2000);
+      
+      // Highlight parts of the current word after features appear
+      setTimeout(() => {
+        const currentWordElem = document.querySelector('.current-word');
+        let displayWord = currentWord.text;
+        
+        currentWord.features.forEach((feature, idx) => {
+          if (feature.highlight) {
+            setTimeout(() => {
+              displayWord = highlightWordPart(displayWord, feature.highlight, feature.type);
+              currentWordElem.innerHTML = displayWord;
+              
+              // Show popups on hover
+              setTimeout(() => {
+                const highlights = currentWordElem.querySelectorAll('.highlighted');
+                highlights.forEach(h => {
+                  h.addEventListener('mouseenter', () => {
+                    const popup = h.querySelector('.feature-popup');
+                    if (popup) popup.style.opacity = 1;
+                  });
+                  
+                  h.addEventListener('mouseleave', () => {
+                    const popup = h.querySelector('.feature-popup');
+                    if (popup) popup.style.opacity = 0;
+                  });
+                });
+              }, 100);
+            }, 500 * idx);
+          }
+        });
+      }, 1500);
+      
+      currentIndex++;
+      
+      // Process next word after delay
+      setTimeout(processNextWord, 5000);
+    }
+    
+    // Start the animation
+    processNextWord();
+  </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Language Patterns Classifier</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      background-color: #111;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(94, 151, 246, 0.2);
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .language-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 25px;
+    }
+
+    .language-column {
+      width: 42%;
+      background-color: #1A1A1A;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(246, 190, 94, 0.1);
+    }
+
+    .language-column h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #5E97F6;
+      padding-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .french-heading {
+      color: #5E97F6;
+      border-bottom-color: #5E97F6 !important;
+    }
+
+    .spanish-heading {
+      color: #F6BE5E;
+      border-bottom-color: #F6BE5E !important;
+    }
+
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .pattern-item {
+      background-color: #2A2A2A;
+      border-radius: 5px;
+      padding: 8px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .pattern-item:hover {
+      transform: scale(1.05);
+      background-color: #3A3A3A;
+    }
+
+    .pattern-label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .french-label {
+      color: #5E97F6;
+    }
+
+    .spanish-label {
+      color: #F6BE5E;
+    }
+
+    .pattern-value {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+    }
+
+    .additional-stats {
+      margin-top: 15px;
+      background-color: #1A1A1A;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .stat-item {
+      display: inline-block;
+      margin: 0 10px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Language Classification Features</h1>
+    
+    <div class="language-section">
+      <div class="language-column">
+        <h2 class="french-heading">French Distinctive Patterns</h2>
+        <div class="pattern-grid">
+          <div class="pattern-item">
+            <div class="pattern-label french-label">eau</div>
+            <div class="pattern-value">9 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label french-label">ai</div>
+            <div class="pattern-value">81 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label french-label">ou</div>
+            <div class="pattern-value">54 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label french-label">eu</div>
+            <div class="pattern-value">33 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label french-label">au</div>
+            <div class="pattern-value">20 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label french-label">oi</div>
+            <div class="pattern-value">20 occurrences</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="language-column">
+        <h2 class="spanish-heading">Spanish Distinctive Patterns</h2>
+        <div class="pattern-grid">
+          <div class="pattern-item">
+            <div class="pattern-label spanish-label">rr</div>
+            <div class="pattern-value">9 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label spanish-label">ll</div>
+            <div class="pattern-value">14 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label spanish-label">ch</div>
+            <div class="pattern-value">9 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label spanish-label">za</div>
+            <div class="pattern-value">13 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label spanish-label">ci</div>
+            <div class="pattern-value">65 occurrences</div>
+          </div>
+          <div class="pattern-item">
+            <div class="pattern-label spanish-label">zo</div>
+            <div class="pattern-value">7 occurrences</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="additional-stats">
+      <div class="stat-item">
+        Total Unique Patterns: 7,369
+      </div>
+      <div class="stat-item">
+        Patterns After Filtering: 1,928
+      </div>
+      <div class="stat-item">
+        Patterns Selected: 700
+      </div>
+    </div>
+  </div>
+</body>
+</html>
