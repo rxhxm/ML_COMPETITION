@@ -8,6 +8,22 @@
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNUU5N0Y2OyI+CiAgICAgICAgPGFuaW1hdGUgYXR0cmlidXRlTmFtZT0ic3RvcC1jb2xvciIgdmFsdWVzPSIjNUU5N0Y2OyNGNkJFNUU7IzVFOTdGNiIgZHVyPSIxLjVzIiByZXBlYXRDb3VudD0iaW5kZWZpbml0ZSIgLz4KICAgICAgPC9zdG9wPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGNkJFNUU7Ij4KICAgICAgICA8YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJzdG9wLWNvbG9yIiB2YWx1ZXM9IiNGNkJFNUU7IzVFOTdGNjsjRjZCRTVFIiBkdXI9IjEuNXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPgogICAgICA8L3N0b3A+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyOCIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2U9InVybCgjZ3JhZCkiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+CiAgICA8YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVOYW1lPSJ0cmFuc2Zvcm0iIHR5cGU9InJvdGF0ZSIgZnJvbT0iMCAzMiAzMiIgdG89IjM2MCAzMiAzMiIgZHVyPSIzcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIC8+CiAgPC9jaXJjbGU+Cjwvc3ZnPg==">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Add PrismJS for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-r.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-scala.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/plugins/line-numbers/prism-line-numbers.min.css">
+    
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -135,6 +151,177 @@
         button:hover {
             background-color: #444;
         }
+        
+        html, body, iframe {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16"><path fill="white" d="M1.918 2.182a.5.5 0 0 0-.103.557L7.472 15.467a.5.5 0 0 0 .917-.007L10.43 10.694l4.767-2.042a.5.5 0 0 0 .006-.916L2.475 2.079a.5.5 0 0 0-.556.103z"/></svg>') 0 0, auto;
+        }
+        
+        /* Custom styling for code blocks */
+        pre[class*="language-"] {
+            border-radius: 8px;
+            margin: 1.5em 0;
+            padding: 1em;
+            overflow: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background-color: #1e1e1e !important; /* VS Code dark theme color */
+            border-left: none; /* Remove blue shadow on the left */
+        }
+        
+        code[class*="language-"] {
+            font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            text-shadow: none;
+        }
+        
+        /* File name display for code blocks */
+        .code-header {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            font-family: 'Fira Code', Consolas, Monaco, monospace;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 8px 8px 0 0;
+            border-left: none; /* Remove blue shadow on the left */
+            margin-top: 1.5em;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .code-header + pre[class*="language-"] {
+            margin-top: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        
+        /* Color circles at the top of code blocks like an IDE window - improving spacing */
+        .code-header::before {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #FF5F56;
+            border-radius: 50%;
+            margin-right: 6px;
+            position: absolute;
+            left: 12px;
+        }
+        
+        .code-header::after {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #FFBD2E;
+            border-radius: 50%;
+            margin-right: 6px;
+            position: absolute;
+            left: 32px;
+        }
+        
+        .code-header .green-circle {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #27C93F;
+            border-radius: 50%;
+            margin-right: 6px;
+            position: absolute;
+            left: 52px;
+        }
+        
+        .code-header .file-name {
+            margin-left: 60px; /* Adjust for the new circle positions */
+        }
+        
+        /* Line number styling */
+        .line-numbers .line-numbers-rows {
+            border-right: 1px solid #3a3a3a;
+        }
+        
+        /* Language tag */
+        .code-header .language-tag {
+            position: absolute;
+            right: 12px;
+            background-color: #5E97F6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        
+        /* Auto-detect language based on class */
+        pre[class*="language-"]:not(.language-none)::before {
+            content: none; /* Remove the auto-generated language badge */
+        }
+        
+        pre[class*="language-"] {
+            position: relative;
+        }
+        
+        /* Custom colors for certain code elements to match popular IDE themes */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #5E97F6; /* French blue for comments */
+        }
+        
+        .token.punctuation {
+            color: #D4D4D4;
+        }
+        
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol,
+        .token.deleted {
+            color: #F6BE5E; /* Spanish orange for numbers and constants */
+        }
+        
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin,
+        .token.inserted {
+            color: #F6BE5E; /* Spanish orange for strings */
+        }
+        
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #D4D4D4;
+        }
+        
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #5E97F6; /* French blue for keywords */
+        }
+        
+        .token.function,
+        .token.class-name {
+            color: #F6BE5E; /* Spanish orange for functions */
+        }
+        
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #5E97F6; /* French blue for variables */
+        }
+        
+        /* Code header language tag color */
+        .code-header .language-tag {
+            background-color: #5E97F6; /* French blue background */
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -151,7 +338,7 @@
     <div class="divider"></div>
     
     <section>
-        <p>I told my professor I would win the competition. I didn't—I came in 2nd out of 211 students. But the near-victory taught me something far more valuable than a first-place finish: what truly separates good machine learning solutions from great ones.</p>
+        <p>I told my professor I would win the competition. I didn't. I came in 2nd out of 211 students. But the near-victory taught me something far more valuable than a first-place finish: <strong>what truly separates good machine learning solutions from great ones.</strong></p>
         
         <div style="text-align: center;">
             <iframe src="intro_3d.html" style="width: 100%; height: 400px; border: none; margin: 20px 0; display: block; background-color: #000;" title="Language Classifier Model Preview" scrolling="no"></iframe>
@@ -174,11 +361,11 @@
         
         <p>What makes language classification fascinating is how it mirrors human intuition. Most people can guess that "meilleur" is French while "mejor" is Spanish based on subtle patterns. But how do you quantify these instincts for a computer?</p>
         
-        <p>"When I first analyzed the data," I thought, "the challenge isn't building a complex model—it's helping the model 'see' what human eyes naturally detect."</p>
+        <p>When I first analyzed the data, I thought, <strong>"the challenge isn't building a complex model. It's helping the model 'see' what human eyes naturally detect."</strong></p>
         
         <p>Consider this: French often uses letter combinations like "eau," "eux," and "ou," while Spanish features "ll," "rr," and "ñ." These patterns aren't random—they're linguistic fingerprints shaped by centuries of language evolution.</p>
         
-        <p>This was my breakthrough realization: We often chase sophisticated algorithms when the real magic lies in how we represent the problem to the algorithm. Feature engineering—the art of transforming raw data into meaningful signals—is what separates good machine learning solutions from great ones.</p>
+        <p>This was my breakthrough realization: <strong>We often chase sophisticated algorithms when the real magic lies in how we represent the problem to the algorithm. Feature engineering—the art of transforming raw data into meaningful signals—is what separates good machine learning solutions from great ones.</strong></p>
         
         <p>Like teaching someone to distinguish Monet from Picasso without art history knowledge, I needed to highlight the brushstrokes and color palettes that make each artist unique.</p>
 
@@ -320,12 +507,12 @@
         <h1>The Art of Feature Engineering:</h1>
         <h2>Decoding Linguistic Fingerprints</h2>
         <p>So we know humans can identify languages without knowing the meaning. So naturally, Spanish and French leave distinctive fingerprints in their words. The following patterns were derived from the dataset. Spanish loves vowel endings (154 words ending in 'o', 123 in 'a'), while French frequently ends with consonants (117 words ending in 't'). Spanish uses characteristic double letters ('rr' in "cierra," 'll' in "belleza"), while French employs unique vowel combinations ('eau' in "beaux," 'ou' in "amour").</p>
-        <p>My initial approach used simple character frequencies, but accuracy plateaued at 75%. The breakthrough came when I realized word endings were disproportionately informative. The pattern 'o$' (words ending in 'o') appeared in 154 Spanish words but zero French words—making it the most predictive feature with an information gain of 0.0736.</p>
+        <p>My initial approach used simple character frequencies, but accuracy plateaued at 75%. <strong>The breakthrough came when I realized word endings were disproportionately informative.</strong> The pattern 'o$' (words ending in 'o') appeared in 154 Spanish words but zero French words—making it the most predictive feature with an information gain of 0.0736.</p>
         
         <p><strong>Information gain:</strong> This metric measures how much a feature helps distinguish between classes (in this case, languages). It ranges from 0 to 1, where higher values indicate stronger predictive power. Though 0.0736 might seem modest on this scale, in language classification even values of 0.05-0.1 are considered quite significant for a single feature.</p>
 
         <h2>Translating Linguistics to Mathematics</h2>
-        <p>To quantify these patterns, I approached the problem like a detective gathering evidence:</p>
+        <p>To quantify these patterns, I approached the problem like a lawyer gathering evidence:</p>
         <ul>
             <li><strong>Extract all possible clues:</strong> I generated character n-grams (1-4 characters), position-specific patterns (prefixes and suffixes), and distinctive combinations ('eau', 'rr', etc.)
                 <ul>
@@ -335,22 +522,41 @@
                 </ul>
             </li>
             <li><strong>Measure each clue's value:</strong> For every pattern, I calculated information gain using this formula:
-                <pre>
-   def calculate_information_gain(total_french, total_spanish, pattern_french, pattern_spanish):
-       # Calculate parent impurity (uncertainty before knowing the pattern)
-       parent_impurity = 1 - (p_french**2 + p_spanish**2)
-       
-       # Calculate weighted impurity after considering the pattern
-       weighted_impurity = (pattern_total / total) * pattern_impurity + 
-                          (non_pattern_total / total) * non_pattern_impurity
-       
-       # Information gain = reduction in uncertainty
-       return parent_impurity - weighted_impurity</pre>
+                
+                <h4 style="margin-top: 20px; color: white; font-weight: bold;">Code:</h4>
+                <div class="code-header">
+                    <span class="green-circle"></span>
+                    <span class="file-name">information_gain.py</span>
+                    <span class="language-tag">Python</span>
+                </div>
+                <pre class="language-python"><code>def calculate_information_gain(total_french, total_spanish, pattern_french, pattern_spanish):
+    total = total_french + total_spanish
+    pattern_total = pattern_french + pattern_spanish
+    non_pattern_french = total_french - pattern_french
+    non_pattern_spanish = total_spanish - pattern_spanish
+    non_pattern_total = total - pattern_total
+    
+    if total == 0 or pattern_total == 0 or non_pattern_total == 0:
+        return 0
+    
+    p_french = total_french / total
+    p_spanish = total_spanish / total
+    parent_impurity = 1 - (p_french**2 + p_spanish**2)
+    
+    pattern_impurity = calculate_gini_impurity(pattern_french, pattern_spanish)
+    non_pattern_impurity = calculate_gini_impurity(non_pattern_french, non_pattern_spanish)
+    
+    weighted_impurity = (pattern_total / total) * pattern_impurity + (non_pattern_total / total) * non_pattern_impurity
+    
+    return parent_impurity - weighted_impurity</code></pre>
 
+                <h4 style="margin-top: 20px; color: white; font-weight: bold;">Math:</h4>
                 <div class="math">
                     IG(pattern) = H(Languages) - H(Languages | pattern)
                 </div>
-                <p>This code simply measures how much our uncertainty about a word's language decreases after knowing whether it contains a specific pattern.</p>
+                
+                <h4 style="margin-top: 20px; color: white; font-weight: bold;">In plain words:</h4>
+                <p>This code simply measures how much our uncertainty about a word's language decreases after knowing whether it contains a specific pattern. Higher values mean the pattern is more helpful for distinguishing between languages.</p>
             </li>
             <li><strong>Prioritize the strongest signals:</strong> Patterns with high information gain and low Gini impurity became top features</li>
             <li><strong>Gini impurity:</strong> This measures how "mixed" a pattern is between languages. A value of 0 means the pattern appears in only one language, while higher values indicate the pattern appears in both languages. The Spanish word ending 'o$' has a perfect 0.0000 impurity—it's pure Spanish signal.</li>
@@ -359,16 +565,39 @@
         <p>The Spanish word ending 'o$' has a perfect 0.0000 impurity—it's pure Spanish signal.</p>
 
         <p>My classification approach went far beyond simple pattern detection. I engineered rich linguistic features capturing the essence of language structure – calculating vowel-to-consonant ratios, measuring character entropy (a measurement of randomness or unpredictability in a set of characters), and detecting sequence patterns like diphthongs ("ia", "ie") that are more common in Spanish. For example, calculating entropy helped identify the character diversity typical in each language:</p>
-        <pre>
-entropy = -sum((count / total_chars) * np.log2(count / total_chars) for count in char_counts.values())</pre>
         
+        <h4 style="margin-top: 20px; color: white; font-weight: bold;">Code:</h4>
+        <div class="code-header">
+            <span class="green-circle"></span>
+            <span class="file-name">entropy_calculation.py</span>
+            <span class="language-tag">Python</span>
+        </div>
+        <pre class="language-python"><code># Excerpt from extract_linguistic_features function in classify.py
+def extract_linguistic_features(word):
+    features = []
+    word = word.lower()
+    
+    # Add various features including word length, vowel ratios, etc.
+    
+    # Calculate entropy of character distribution
+    char_counts = Counter(word)
+    total_chars = len(word)
+    entropy = -sum((count / total_chars) * np.log2(count / total_chars) for count in char_counts.values())
+    features.append(entropy)
+    
+    # Add more linguistic features
+    
+    return features</code></pre>
+        
+        <h4 style="margin-top: 20px; color: white; font-weight: bold;">Math:</h4>
         <div class="math">
             $$H(X) = -\\sum_{i=1}^{n} P(x_i) \\log_2 P(x_i)$$
         </div>
         
-        <p>This code calculates how unpredictable the distribution of characters is in a text sample.</p>
+        <h4 style="margin-top: 20px; color: white; font-weight: bold;">In plain words:</h4>
+        <p>This code calculates how unpredictable the distribution of characters is in a text sample. Languages with more varied character usage patterns will have higher entropy values. French tends to have more diverse character combinations than Spanish, making entropy a useful discriminating feature.</p>
         
-        <p>The system incorporated rule-based corrections for high-confidence patterns with definitive language markers ("ll" for Spanish, "eau" for French). This hybrid approach – statistical learning enriched with linguistic rules – addressed edge cases that pure statistical models missed.</p>
+        <p><strong>The system incorporated rule-based corrections for high-confidence patterns with definitive language markers ("ll" for Spanish, "eau" for French). This hybrid approach – statistical learning enriched with linguistic rules – addressed edge cases that pure statistical models missed.</strong></p>
         
         <div class="divider"></div>
         
@@ -395,7 +624,7 @@ entropy = -sum((count / total_chars) * np.log2(count / total_chars) for count in
 
         <p>My "aha moment" came when examining top patterns by language. Spanish-indicative patterns were dominated by vowel endings ('o$', 'a$', 'do$'), while French-indicative patterns included consonant endings ('t$', 'nt$') and internal vowel combinations ('ai', 'ou').</p>
 
-        <p>The success of this approach demonstrates the power of letting the data reveal its structure. Rather than forcing complex algorithms onto simple features, I extracted complex features that allowed even a basic ridge regression model to achieve exceptional performance.</p>
+        <p><strong>The success of this approach demonstrates the power of letting the data reveal its structure. Rather than forcing complex algorithms onto simple features, I extracted complex features that allowed even a basic ridge regression model to achieve exceptional performance.</strong></p>
 
         <iframe src="features.html" style="width: 100%; height: 520px; border: none; margin: 20px 0;" title="Language Classification Features"></iframe>
     </section>
@@ -403,7 +632,7 @@ entropy = -sum((count / total_chars) * np.log2(count / total_chars) for count in
     <section>
         <h1>From Features to Architecture: Building a Winning Model</h1>
         <h2>Embracing Simplicity with Ridge Regression</h2>
-        <p>I realized that model complexity wasn't the deciding factor. "Why use a sledgehammer when a scalpel will do?" I thought. Ridge regression became my tool of choice for three reasons:</p>
+        <p><strong>I realized that model complexity wasn't the deciding factor.</strong> "Why use a sledgehammer when a scalpel will do?" I thought. Ridge regression became my tool of choice for three reasons:</p>
         <ul>
             <li><strong>Interpretability:</strong> With hundreds of linguistic features, I needed a model where I could trace exactly how each pattern contributed to the classification decision.</li>
             <li><strong>Efficiency:</strong> The competition's restrictions on libraries meant I needed an algorithm I could implement from scratch without excessive computational demands.</li>
@@ -411,14 +640,40 @@ entropy = -sum((count / total_chars) * np.log2(count / total_chars) for count in
         </ul>
         
         <p>Ridge regression's mathematical beauty lies in its modified objective function: it minimizes not just the error but also the sum of squared weights. This single regularization parameter (alpha) provided all the complexity control I needed. The closed-form solution made it computationally efficient:</p>
-        <pre>
-weights = np.linalg.solve(X_train.T @ X_train + alpha * np.eye(n_features), X_train.T @ y_train)</pre>
+        
+        <h4 style="margin-top: 20px; color: white; font-weight: bold;">Code:</h4>
+        <div class="code-header">
+            <span class="green-circle"></span>
+            <span class="file-name">ridge_regression.py</span>
+            <span class="language-tag">Python</span>
+        </div>
+        <pre class="language-python"><code># This is part of the train_model function in classify.py
+def train_model(X, y, alphas=None):
+    if alphas is None:
+        alphas = [0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+    
+    y_numeric = np.array([0 if label == 'french' else 1 for label in y])
+    
+    # Perform cross-validation to find best alpha
+    # ...
+    
+    # Final model training with best alpha
+    XTX = X.T @ X
+    reg_matrix = XTX + best_alpha * np.eye(XTX.shape[0])
+    XTy = X.T @ y_numeric
+    
+    # Ridge regression closed-form solution
+    beta = np.linalg.solve(reg_matrix, XTy)
+    
+    return beta, best_alpha</code></pre>
 
+        <h4 style="margin-top: 20px; color: white; font-weight: bold;">Math:</h4>
         <div class="math">
             $$\\hat{\\beta}_{ridge} = (X^TX + \\alpha I)^{-1}X^Ty$$
         </div>
         
-        <p>This code solves a system of equations to find the optimal weights while keeping them from growing too large.</p>
+        <h4 style="margin-top: 20px; color: white; font-weight: bold;">In plain words:</h4>
+        <p>This code solves a system of equations to find the optimal weights while keeping them from growing too large. The alpha parameter controls how much we penalize large weights - higher values of alpha create simpler models that are less likely to overfit. The solve function efficiently calculates the weights without requiring iterative gradient descent.</p>
         
         <h2>Finding the Sweet Spot with Cross-Validation</h2>
         <p>The trickiest challenge was preventing overfitting on such a small dataset. "How do I ensure my model will generalize to the unseen test set?" This question led me to implement 5-fold cross-validation to select the optimal regularization strength.</p>
@@ -477,10 +732,10 @@ weights = np.linalg.solve(X_train.T @ X_train + alpha * np.eye(n_features), X_tr
 
         <p>Feature engineering trumps model complexity. The most sophisticated algorithm can't compensate for poor features. In retrospect, my biggest wins came from creating signals that highlighted linguistic patterns, not from tweaking model parameters. This principle applies universally: make your data speak before making your model listen.</p>
         
-        <p>"What if the secret to machine learning isn't in the learning at all, but in how we represent the problem?" This question transformed my approach to ML competitions. Domain knowledge is the hidden multiplier that separates good models from great ones. In every competition I've seen the same pattern: domain experts consistently outperform algorithm experts.</p>
+        <p><strong>"What if the secret to machine learning isn't in the learning at all, but in how we represent the problem?"</strong> This question transformed my approach to ML competitions. Domain knowledge is the hidden multiplier that separates good models from great ones. In every competition I've seen the same pattern: domain experts consistently outperform algorithm experts.</p>
         
         <h2>Future Improvements: Research First, Code Later</h2>
-        <p>If I could do it again, I'd spend less time coding and more time researching how linguists encode language differences. Spending 80% of my time on feature engineering and 20% on modeling (not vice versa) would likely yield better results.</p>
+        <p>If I could do it again, I'd spend less time coding and more time researching how linguists encode language differences. <strong>Spending 80% of my time on feature engineering and 20% on modeling (not vice versa) would likely yield better results.</strong></p>
         
         <p>The razor-thin margins between top performers (90.3% vs. 88.9% for 5th place) highlight a profound truth about ML competitions: randomness plays a significant role in determining winners. As my professor wisely noted, "The top model isn't necessarily better than fifth place—it just happened to score higher on this test set" and that that regenerating the test set would likely crown a different champion. This isn't discouraging—it's liberating! It means focusing on robust methodologies matters more than obsessing over leaderboard positions. The lesson? Don't obsess over decimal places. Instead, focus on robust feature engineering, domain knowledge integration, and efficient cross-validation. These principles will serve you well in any data science challenge.</p>
         
@@ -490,7 +745,7 @@ weights = np.linalg.solve(X_train.T @ X_train + alpha * np.eye(n_features), X_tr
             <li>Crafting features that capture expert intuition</li>
             <li>Building simple, robust models that avoid overfitting on small datasets</li>
         </ul>
-        <p>The best competitors don't just build good models—they reframe the problem to make it easier to solve.</p>
+        <p><strong>The best competitors don't just build good models—they reframe the problem to make it easier to solve.</strong></p>
     </section>
     
     <div class="divider"></div>
